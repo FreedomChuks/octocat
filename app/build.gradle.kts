@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.freedom.octocat"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.freedom.octocat"
@@ -40,6 +40,9 @@ android {
 }
 
 dependencies {
+    implementation(projects.features.breedList)
+    implementation(projects.features.breedDetails)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

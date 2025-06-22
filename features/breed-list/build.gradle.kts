@@ -33,9 +33,10 @@ android {
 }
 
 dependencies {
-
+    implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
+    implementation(libs.bundles.coilBundle)
     implementation(libs.bundles.composeUiBundle)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -33,7 +33,8 @@ android {
 }
 
 dependencies {
-
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.bundles.coilBundle)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.bundles.composeUiBundle)
