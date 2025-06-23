@@ -34,9 +34,8 @@ android {
 
 dependencies {
     implementation(projects.core.network)
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
+    implementation(libs.hilt.android)
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.mockk)
 }
