@@ -9,5 +9,5 @@ interface CatApiService {
     suspend fun getCatsWithBreeds(
         @Query("limit") limit: Int = 10,
         @Query("has_breeds") hasBreeds: Int = 1,
-    ): List<CatApiResponse>
+    ): CatApiResponse
 }

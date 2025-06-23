@@ -6,5 +6,5 @@ import javax.inject.Inject
 class NetworkDataSourceImpl @Inject constructor(
     private val catApiService: CatApiService
 ): NetworkDatasource {
-    override suspend fun getCatBreeds() = catApiService.getCatsWithBreeds()
+    override suspend fun getCatBreed() = catApiService.getCatsWithBreeds()
 }
