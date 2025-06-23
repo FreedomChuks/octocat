@@ -9,7 +9,6 @@ data class CatModel(
 )
 data class Breed(
     val id: String,
-    val weight: Weight,
     val name: String,
     val temperament: String,
     val origin: String,
@@ -43,8 +42,4 @@ data class Breed(
     val shortLegs: Int,
     val wikipediaUrl: String?,
     val referenceImageId: String?,
-)
-data class Weight(
-    val imperial: String,
-    val metric: String
 )

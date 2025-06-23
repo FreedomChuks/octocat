@@ -5,7 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class BreedDto(
-    val weight: Weight,
     val id: String,
     val name: String,
     val temperament: String,
@@ -40,10 +39,5 @@ data class BreedDto(
     @SerialName("short_legs") val shortLegs: Int,
     @SerialName("wikipedia_url") val wikipediaUrl: String?,
     @SerialName("reference_image_id") val referenceImageId: String?,
-)
-@Serializable
-data class Weight(
-    val imperial: String,
-    val metric: String
 )
 
