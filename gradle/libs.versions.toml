@@ -22,6 +22,9 @@ nav3Core = "1.0.0-alpha04"
 okhttp = "4.12.0"
 jetbrainsKotlinJvm = "2.1.21"
 secrets = "2.0.1"
+mockkVersion ="1.14.2"
+coroutines_test_version = "1.10.2"
+
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -48,6 +51,8 @@ androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runt
 androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3Core" }
 compose-hilt-navigation = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidxHiltNavigationCompose" }
 androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycleViewmodelNav3" }
+mockk = { module ="io.mockk:mockk-android", version.ref = "mockkVersion" }
+coroutines-test ={ group ="org.jetbrains.kotlinx",name="kotlinx-coroutines-test", version.ref = "coroutines_test_version"}
 
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }

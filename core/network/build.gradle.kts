@@ -39,11 +39,15 @@ android {
 dependencies {
     api(projects.core.common)
     api(projects.core.model)
-    implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+
+    implementation(libs.hilt.android)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.okhttp.logging)
     implementation(libs.retrofit.core)
-    testImplementation(libs.junit)
     implementation(libs.retrofit.kotlin.serialization)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.mockk)
 }
