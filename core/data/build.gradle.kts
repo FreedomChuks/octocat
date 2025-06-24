@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    id("dagger.hilt.android.plugin")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -33,9 +35,15 @@ android {
 }
 
 dependencies {
+    api(projects.core.model)
     implementation(projects.core.network)
+
+    implementation(libs.androidx.paging.runtime)
     implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+
     testImplementation(libs.junit)
     testImplementation(libs.coroutines.test)
     testImplementation(libs.mockk)
+    testImplementation(libs.androidx.paging.common)
 }

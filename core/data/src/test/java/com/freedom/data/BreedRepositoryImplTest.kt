@@ -1,11 +1,18 @@
 package com.freedom.data
 
-import com.freedom.common.NetworkResult
+import androidx.paging.PagingConfig
+import androidx.paging.PagingSource
+import androidx.paging.PagingState
+import com.freedom.data.paging.BreedPagingSource
+import com.freedom.model.CatModel
 import com.freedom.network.NetworkDatasource
 import com.freedom.network.model.BreedDto
 import com.freedom.network.model.CatApiResponse
+import com.freedom.network.model.Weight
 import io.mockk.coEvery
 import io.mockk.mockk
+import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertNull
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -22,75 +29,54 @@ class BreedRepositoryImplTest {
     }
 
     @Test
-    fun `getBreeds should return a list of breeds when API call is successful`() = runTest {
-        //Given
-        val breed = listOf(
-            BreedDto(
-                id = "1",
-                name = "Breed1",
-                temperament = "Temperament1",
-                origin = "Origin1",
-                description = "Description1",
-                lifeSpan = "LifeSpan1",
-                adaptability = 1,
-                affectionLevel = 2,
-                childFriendly = 3,
-                dogFriendly = 4,
-                energyLevel = 5,
-                grooming = 1,
-                wikipediaUrl = "WikipediaUrl1",
-                vocalisation = 1,
-                intelligence = 1,
-                vetStreetUrl = "VetStreetUrl1",
-                healthIssues = 1,
-                socialNeeds = 1,
-                strangerFriendly = 1,
-                referenceImageId = "ReferenceImageId1",
-                altNames = "AltNames1",
-                indoor = 1,
-                lap = 1,
-                hairless = 1,
-                rex = 1,
-                rare = 2,
-                hypoallergenic = 2,
-                countryCodes = "US",
-                experimental = 1,
-                natural = 1,
-                suppressedTail = 1,
-                shortLegs = 1,
-                sheddingLevel = 1,
-                vcaHospitalsUrl = "VcaHospitalsUrl1"
-            )
-        )
-        val dto = CatApiResponse(
-            breeds = breed,
-            url = "Url1",
-            width = 100,
-            height = 100,
-            id = "1"
-        )
+    fun `load returns Page when networkDatasource succeeds`() = runTest {
+        val datasource = mockk<NetworkDatasource>()
+        coEvery { datasource.getCatBreed(page = 0, limit = 2) } returns listOf(TestData.fakeCatImageDto)
+        val source = BreedPagingSource(networkDatasource = datasource, limit = 2)
 
-        coEvery { network.getCatBreed() } returns dto
+        val params = PagingSource.LoadParams.Refresh(key = 0, loadSize = 2, placeholdersEnabled = false)
+        val result = source.load(params)
 
-        val result = repository.getCatBreed()
 
-        assertTrue(result is NetworkResult.Success)
-        val successResult = (result as NetworkResult.Success).data
-        assertTrue(successResult.breeds.isNotEmpty())
-        assertTrue(successResult.breeds.size == 1)
-        assertTrue(successResult.breeds[0].id == "1")
-        assertTrue(successResult.breeds[0].name == "Breed1")
+        assertTrue(result is PagingSource.LoadResult.Page)
+        val page = result as PagingSource.LoadResult.Page<Int, CatModel>
+
+        assertEquals(1, page.data.size)
+        val cat = page.data.first()
+        assertEquals("1", cat.id)
+        assertEquals("Birman", cat.breeds[0].name)
+
+        assertNull(page.prevKey)
+        assertNull(page.nextKey)
     }
 
     @Test
-    fun `getBreeds should return an error when API call throws an IOException`() = runTest {
-        coEvery { network.getCatBreed() } throws IOException("Network error")
+    fun `load returns Error when networkDatasource throws IOException`() = runTest {
+        val datasource = mockk<NetworkDatasource>()
+        coEvery { datasource.getCatBreed(page = any(), limit = any()) } throws IOException("network down")
+        val source = BreedPagingSource(networkDatasource = datasource, limit = 5)
 
-        val result = repository.getCatBreed()
+        val params = PagingSource.LoadParams.Append(key = 1, loadSize = 5, placeholdersEnabled = false)
+        val result = source.load(params)
 
-        assertTrue(result is NetworkResult.Error)
-        val errorResult = (result as NetworkResult.Error).message
-        assertTrue(errorResult == "Network error")
+        assertTrue(result is PagingSource.LoadResult.Error)
     }
+
+    @Test
+    fun `getRefreshKey returns null when no page covers anchorPosition`() {
+        val source = BreedPagingSource(mockk(), limit = 4)
+        val page1: PagingSource.LoadResult.Page<Int, CatModel> = PagingSource.LoadResult.Page(emptyList(), prevKey = null, nextKey = 1)
+        val page2: PagingSource.LoadResult.Page<Int, CatModel> = PagingSource.LoadResult.Page(emptyList(), prevKey = 0,    nextKey = 2)
+        val state = PagingState(
+            pages = listOf(page1, page2),
+            anchorPosition = 5,
+            config = PagingConfig(pageSize = 4),
+            leadingPlaceholderCount = 0
+        )
+
+        val refreshKey = source.getRefreshKey(state)
+        assertNull(refreshKey)
+    }
+
 
 }

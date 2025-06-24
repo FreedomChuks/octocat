@@ -1,7 +1,8 @@
 package com.freedom.data
-import com.freedom.common.NetworkResult
+import androidx.paging.PagingData
 import com.freedom.model.CatModel
+import kotlinx.coroutines.flow.Flow
 
 interface BreedRepository {
-     suspend fun getCatBreed(): NetworkResult<CatModel>
+     fun getCatBreed(limit: Int = 10): Flow<PagingData<CatModel>>
 }
