@@ -1,5 +1,8 @@
 package com.freedom.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class CatModel(
     val breeds: List<Breed>,
     val id: String,
@@ -7,6 +10,7 @@ data class CatModel(
     val width: Int,
     val height: Int
 )
+@Serializable
 data class Breed(
     val id: String,
     val name: String,
@@ -25,11 +29,8 @@ data class Breed(
     val rare: Int,
     val rex: Int,
     val hypoallergenic: Int,
-    val vetStreetUrl: String?,
-    val vcaHospitalsUrl: String?,
     val countryCodes: String,
     val lifeSpan: String,
-    val altNames: String?,
     val affectionLevel: Int,
     val childFriendly: Int,
     val dogFriendly: Int,
@@ -40,6 +41,10 @@ data class Breed(
     val strangerFriendly: Int,
     val suppressedTail: Int,
     val shortLegs: Int,
-    val wikipediaUrl: String?,
-    val referenceImageId: String?,
+    val weight: Weight
+)
+@Serializable
+data class Weight(
+    val imperial: String,
+    val metric: String
 )

@@ -1,11 +1,12 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
     namespace = "com.freedom.breed_details"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 35
@@ -30,15 +31,20 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    buildFeatures {
+        compose = true
+    }
 }
 
 dependencies {
+    implementation(projects.core.designsystem)
+    implementation(projects.core.model)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.coilBundle)
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
+
     implementation(libs.bundles.composeUiBundle)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    debugImplementation(libs.androidx.compose.ui.tooling)
 }

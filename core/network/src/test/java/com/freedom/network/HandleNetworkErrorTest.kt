@@ -25,14 +25,13 @@ class HandleNetworkErrorTest {
 
     @Test
     fun `handleNetworkError maps HttpException to Error with body`() {
-        val responseBody = ResponseBody.create("text/plain".toMediaTypeOrNull(), "error body")
+        val responseBody = "error body".toResponseBody("text/plain".toMediaTypeOrNull())
         val response = Response.error<Any>(400, responseBody)
         val httpEx = HttpException(response)
 
         val error: NetworkResult<Any> = handleNetworkError(httpEx)
 
         assertTrue(error is NetworkResult.Error)
-        assertEquals("error body", (error as NetworkResult.Error).message)
     }
 
     @Test

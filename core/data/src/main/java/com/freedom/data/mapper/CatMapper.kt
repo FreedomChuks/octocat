@@ -2,6 +2,7 @@ package com.freedom.data.mapper
 
 import com.freedom.model.Breed
 import com.freedom.model.CatModel
+import com.freedom.model.Weight
 import com.freedom.network.model.BreedDto
 import com.freedom.network.model.CatApiResponse
 
@@ -31,11 +32,8 @@ private fun BreedDto.toDomain(): Breed = Breed(
     rare = rare,
     rex = rex,
     hypoallergenic = hypoallergenic,
-    vetStreetUrl = vetStreetUrl,
-    vcaHospitalsUrl = vcaHospitalsUrl,
     countryCodes = countryCodes,
     lifeSpan = lifeSpan,
-    altNames = altNames,
     affectionLevel = affectionLevel,
     childFriendly = childFriendly,
     dogFriendly = dogFriendly,
@@ -46,6 +44,8 @@ private fun BreedDto.toDomain(): Breed = Breed(
     strangerFriendly = strangerFriendly,
     suppressedTail = suppressedTail,
     shortLegs = shortLegs,
-    wikipediaUrl = wikipediaUrl,
-    referenceImageId = referenceImageId,
+    weight = Weight(
+        imperial = weight.imperial,
+        metric = weight.metric
+    )
 )
