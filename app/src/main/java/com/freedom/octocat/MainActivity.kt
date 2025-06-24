@@ -4,44 +4,44 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.freedom.octocat.ui.theme.OctocatTheme
+import androidx.navigation3.runtime.entry
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.ui.NavDisplay
+import com.freedom.breed_details.BreedDetailScreen
+import com.freedom.breed_list.BreedListScreen
+import com.freedom.designsystem.theme.OctocatTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            OctocatTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+            val backStack = rememberNavBackStack<NavigationScreens>(NavigationScreens.BreedList)
+            OctocatTheme  {
+                NavDisplay(
+                    backStack = backStack,
+                    onBack = { backStack.removeLastOrNull() },
+                    entryProvider = entryProvider {
+                        entry<NavigationScreens.BreedList> {
+                            BreedListScreen(
+                                onCardClicked = {
+                                    backStack.add(NavigationScreens.BreedDetails(it))
+                                }
+                            )
+                        }
+                        entry<NavigationScreens.BreedDetails> { key->
+                            BreedDetailScreen(
+                                onBack = { backStack.removeLastOrNull()},
+                                catModel = key.catModel
+                            )
+                        }
+                    }
+                )
             }
         }
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    OctocatTheme {
-        Greeting("Android")
-    }
 }

@@ -26,7 +26,7 @@ import com.freedom.model.CatModel
 @Composable
 fun BreedListScreen(
     viewModel: BreedListViewModel = hiltViewModel(),
-    onBreedClick: (CatModel) -> Unit
+    onCardClicked: (CatModel) -> Unit
 ) {
     val breeds = viewModel.cats.collectAsLazyPagingItems()
 
@@ -42,7 +42,7 @@ fun BreedListScreen(
                 breeds[index]?.let {
                     BreedCard(
                         catModel = it,
-                        onCardClick = onBreedClick
+                        onCardClick = onCardClicked
                     )
                 }
             }
