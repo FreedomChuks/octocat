@@ -37,8 +37,8 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.model)
     api(projects.core.common)
-    api(projects.core.model)
     ksp(libs.hilt.compiler)
 
     implementation(libs.hilt.android)

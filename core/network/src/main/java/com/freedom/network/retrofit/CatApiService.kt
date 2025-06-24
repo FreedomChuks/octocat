@@ -7,7 +7,8 @@ import retrofit2.http.Query
 interface CatApiService {
     @GET("v1/images/search")
     suspend fun getCatsWithBreeds(
-        @Query("limit") limit: Int = 10,
+        @Query("limit") limit: Int,
+        @Query("page") page: Int,
         @Query("has_breeds") hasBreeds: Int = 1,
-    ): CatApiResponse
+    ): List<CatApiResponse>
 }

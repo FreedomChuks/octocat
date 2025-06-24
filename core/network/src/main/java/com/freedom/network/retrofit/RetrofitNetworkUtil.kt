@@ -18,17 +18,12 @@ suspend inline fun <T, R> safeNetworkCall(
         onFailure = ::handleNetworkError
     )
 
-/**
- * Transforms a thrown [Throwable] into a [NetworkResult.Error] instance.
- */
 fun <T> handleNetworkError(throwable: Throwable): NetworkResult<T> = when (throwable) {
     is IOException   -> NetworkResult.Error(throwable.message.orEmpty())
     is HttpException -> NetworkResult.Error(convertErrorBody(throwable).orEmpty())
     else             -> NetworkResult.Error(throwable.message.orEmpty())
 }
 
-/**
- * Attempts to read the error body of an [HttpException] as a raw string.
- */
+
 fun convertErrorBody(exception: HttpException): String? =
     runCatching { exception.response()?.body().toString() }.getOrNull()

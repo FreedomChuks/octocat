@@ -11,7 +11,7 @@ data class BreedDto(
     val origin: String,
     val description: String,
     val indoor: Int,
-    val lap: Int?,
+    val lap: Int?=null,
     val adaptability: Int,
     val grooming: Int,
     val intelligence: Int,
@@ -22,11 +22,12 @@ data class BreedDto(
     val rare: Int,
     val rex: Int,
     val hypoallergenic: Int,
-    @SerialName("vetstreet_url") val vetStreetUrl: String?,
-    @SerialName("vcahospitals_url") val vcaHospitalsUrl: String?,
+    val weight: Weight,
+    @SerialName("vetstreet_url") val vetStreetUrl: String?=null,
+    @SerialName("vcahospitals_url") val vcaHospitalsUrl: String?=null,
     @SerialName("country_codes") val countryCodes: String,
     @SerialName("life_span") val lifeSpan: String,
-    @SerialName("alt_names") val altNames: String?,
+    @SerialName("alt_names") val altNames: String?=null,
     @SerialName("affection_level") val affectionLevel: Int,
     @SerialName("child_friendly") val childFriendly: Int,
     @SerialName("dog_friendly") val dogFriendly: Int,
@@ -37,7 +38,12 @@ data class BreedDto(
     @SerialName("stranger_friendly") val strangerFriendly: Int,
     @SerialName("suppressed_tail") val suppressedTail: Int,
     @SerialName("short_legs") val shortLegs: Int,
-    @SerialName("wikipedia_url") val wikipediaUrl: String?,
-    @SerialName("reference_image_id") val referenceImageId: String?,
+    @SerialName("wikipedia_url") val wikipediaUrl: String?=null,
+    @SerialName("reference_image_id") val referenceImageId: String?=null,
+)
+@Serializable
+data class Weight(
+    val imperial: String,
+    val metric: String
 )
 

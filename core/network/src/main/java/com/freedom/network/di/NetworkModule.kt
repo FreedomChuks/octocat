@@ -9,55 +9,71 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import jakarta.inject.Singleton
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal object NetworkModule {
+object NetworkModule {
+
     private const val BASE_URL = "https://api.thecatapi.com"
+    private const val API_KEY = "live_tRoTpMfOKC2UePcT4fR8DdlMC1A6kLd2RP5ZTScDiUnIqNHjJ4rB2r74C3gZhtyt"
+    private val CONTENT_TYPE = "application/json".toMediaType()
 
     @Provides
     @Singleton
-    fun providesLenientJson() = Json {
+    fun provideJson(): Json = Json {
         isLenient = true
         ignoreUnknownKeys = true
     }
 
-    @Singleton
     @Provides
-    fun provideOkHttpClient(): OkHttpClient {
-        return OkHttpClient.Builder()
+    @Singleton
+    fun provideOkHttpClient(): OkHttpClient =
+        OkHttpClient.Builder()
+            .addInterceptor { chain ->
+                chain.request()
+                    .newBuilder()
+                    .addHeader("x-api-key", API_KEY)
+                    .build()
+                    .let(chain::proceed)
+            }
             .addInterceptor(
                 HttpLoggingInterceptor().apply {
-                    if (BuildConfig.DEBUG) {
-                        setLevel(HttpLoggingInterceptor.Level.BODY)
+                    level = if (BuildConfig.DEBUG) {
+                        HttpLoggingInterceptor.Level.BODY
+                    } else {
+                        HttpLoggingInterceptor.Level.NONE
                     }
                 },
-            ).build()
-    }
+            )
+            .build()
 
     @Provides
     @Singleton
     fun provideCatApiService(
         json: Json,
-        okHttpClient: OkHttpClient,
-    ):CatApiService = Retrofit.Builder()
-        .baseUrl(BASE_URL)
-        .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
-        .client(okHttpClient)
-        .build()
-        .create(CatApiService::class.java)
+        client: OkHttpClient,
+    ): CatApiService =
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(client)
+            .addConverterFactory(json.asConverterFactory(CONTENT_TYPE))
+            .build()
+            .create(CatApiService::class.java)
 }
 
 @Module
 @InstallIn(SingletonComponent::class)
-interface NetworkDatasourceModule {
+interface NetworkDataSourceModule {
+
     @Binds
-    fun provideNetworkDatasource(networkDataSourceImpl: NetworkDataSourceImpl): NetworkDatasource
+    fun bindNetworkDatasource(
+        impl: NetworkDataSourceImpl,
+    ): NetworkDatasource
 }
