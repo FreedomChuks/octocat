@@ -1,4 +1,4 @@
-package com.freedom.breed_list
+package com.freedom.designsystem
 
 import org.junit.Test
 
