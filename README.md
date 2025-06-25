@@ -1,33 +1,24 @@
 # octocat
 
-## 🚀 Approach
-
-1. **Clean, feature-based modules**
-  - **`:core:model`** holds pure Kotlin data classes (`CatModel`, `Breed`) with no Android or DI.
-  - **`:core:network`** declares a `CatApiService` Retrofit interface and matching serializable DTOs.
-  - **`:core:common`** provides `NetworkResult` + `safeNetworkCall` to wrap errors in a uniform sealed type.
-  - **`:core:data`** implements `BreedRepository` and a `PagingSource` that uses the network interface → domain mappers.
-  - **Features** (`:feature:breed-list` & `:feature:breed-details`) consume only domain classes, Compose UIs, and ViewModels.
-
-2. **Platform-agnostic network layer**
+## Approach
+**Platform-agnostic network layer**
   - The app code depends only on a `NetworkDatasource` interface, not Retrofit directly.
   - You could swap in **Ktor**, **OkHttp**, or any other HTTP client by providing a new implementation of `NetworkDatasource`.
 
-3. **Paging 3 for infinite scroll**
+**Paging 3 for infinite scroll**
   - A custom `BreedPagingSource` drives `/v1/images/search?has_breeds=1&page=X&limit=Y`, maps DTOs → `CatModel`, and emits `PagingData<CatModel>`.
-  - Compose’s `LazyColumn` + `collectAsLazyPagingItems()` renders items + load-state spinners/errors with almost zero UI boilerplate.
+  - Compose’s `LazyColumn` + `collectAsLazyPagingItems()` renders items + load-state spinners/errors
 
-4. **Dependency Injection with Hilt**
+**Dependency Injection with Hilt**
   - Modules provide Retrofit, `NetworkDatasource`, `BreedRepository`, and feature ViewModels.
   - All classes are easy to mock or swap in tests because they depend only on interfaces.
 
-5. **Test-first mindset**
+**Test-coverages**
   - **Unit tests** cover:
     - `NetworkDataSourceImpl` delegates correctly and propagates errors.
     - `BreedPagingSource` boundary logic (`nextKey`/`prevKey`, error cases).
     - `BreedRepositoryImpl` emits a `Flow<PagingData<…>>`.
     - `BreedListViewModel` wires up the repository and honors the page-size constant.
-  - Shared test fixtures live in a `testFixtures` source set, so no large DTO definitions are copy-pasted.
 
 | Gradle Module                | What it owns                                                                                                                                                                       | Depends on                                                                                                               |
 |------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------|
@@ -41,7 +32,7 @@
 | **`:feature:breed-details`** | Breed-details feature: `BreedDetailScreen` composable renders a single `CatModel` passed from the list with full breed info                                                        | **`:core:model`**, **`:core:designsystem`**                                                                              |
 
 
-## 🔧 What I’d Add Next
+## What I’d Add Next
 
 - **Build script consolidation**  
   Extract common Gradle plugin/configuration into a shared Gradle convention plugin to DRY up module `build.gradle` files.
@@ -49,7 +40,3 @@
   If API tier allows, pass `breed_ids=<id>` to avoid client-side filtering and optimize bandwidth.
 - **Offline caching**  
   Layer in Room or SQLDelight for persisting pages, and serve from local DB when offline.
-- **End-to-end tests**  
-  Add Compose UI tests to verify navigation and load-state UIs under various network scenarios.
-- **iOS/multiplatform**  
-  Because the network/data layers are platform-agnostic, I could extract them into a Kotlin Multiplatform module and ship an iOS version with SwiftUI.
