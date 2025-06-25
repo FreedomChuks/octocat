@@ -1,24 +1,25 @@
 # octocat
+A multi-module, Jetpack Compose (Android) codebase that fetches, pages, and displays cat images (with breed metadata) from The Cat API.
 
 ## Approach
-**Platform-agnostic network layer**
+1.**Platform-agnostic network layer**
   - The app code depends only on a `NetworkDatasource` interface, not Retrofit directly.
   - You could swap in **Ktor**, **OkHttp**, or any other HTTP client by providing a new implementation of `NetworkDatasource`.
 
-**Paging 3 for infinite scroll**
+2.**Paging 3 for infinite scroll**
   - A custom `BreedPagingSource` drives `/v1/images/search?has_breeds=1&page=X&limit=Y`, maps DTOs → `CatModel`, and emits `PagingData<CatModel>`.
   - Compose’s `LazyColumn` + `collectAsLazyPagingItems()` renders items + load-state spinners/errors
 
-**Dependency Injection with Hilt**
+2.**Dependency Injection with Hilt**
   - Modules provide Retrofit, `NetworkDatasource`, `BreedRepository`, and feature ViewModels.
   - All classes are easy to mock or swap in tests because they depend only on interfaces.
 
-**Test-coverages**
+4.**Test-coverages**
   - **Unit tests** cover:
-    - `NetworkDataSourceImpl` delegates correctly and propagates errors.
-    - `BreedPagingSource` boundary logic (`nextKey`/`prevKey`, error cases).
-    - `BreedRepositoryImpl` emits a `Flow<PagingData<…>>`.
-    - `BreedListViewModel` wires up the repository and honors the page-size constant.
+    - `NetworkDataSourceImpl` 
+    - `BreedPagingSource` 
+    - `BreedRepositoryImpl`
+    - `BreedListViewModel` 
 
 | Gradle Module                | What it owns                                                                                                                                                                       | Depends on                                                                                                               |
 |------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------|
