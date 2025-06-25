@@ -1,6 +1,18 @@
 # octocat
 A multi-module, Jetpack Compose (Android) codebase that fetches, pages, and displays cat images (with breed metadata) from The Cat API.
 
+# Screenshot
+![Screenshot](design/design.png)
+| Gradle Module                | What it owns                                                                                                                                                                       | Depends on                                                                                                               |
+|------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------|
+| **`:app`**                   | Main Android application entry-point: sets up Hilt, hosts the `NavDisplay`/NavHost, wires together `feature:breed-list` & `feature:breed-details`, applies the design system theme | `implementation` on **`:core:designsystem`**, **`:feature:breed-list`**, **`:feature:breed-details`**, **`:core:model`** |
+| **`:core:model`**            | Pure Kotlin domain models: `CatModel`, `Breed`, `Weight`, etc. — no Android or DI dependencies                                                                                     | *None*                                                                                                                   |
+| **`:core:designsystem`**     | Reusable Compose UI atoms: color palettes, typography, themes, and common composable                                                                                               | *None*                                                                                                                   |
+| **`:core:common`**           | Generic utilities & error-handling: `NetworkResult` sealed class, `safeNetworkCall`, `handleNetworkError`, `convertErrorBody`                                                      | *None*                                                                                                                   |
+| **`:core:network`**          | Networking layer: Retrofit `CatApiService`, DTOs matching The Cat API, Kotlinx-Serialization setup                                                                                 | **`:core:model`**                                                                                                        |
+| **`:core:data`**             | Data layer & repositories: `BreedRepositoryImpl`, `BreedPagingSource`, DTO→domain `toDomain()` mappers, paging configuration                                                       | **`:core:model`**, **`:core:network`**, **`:core:common`**                                                               |
+| **`:feature:breed-list`**    | Breed-list feature: `BreedListViewModel` (exposes `Flow<PagingData<CatModel>>`), `CatListScreen` composable with infinite-scroll paging                                            | **`:core:data`**, **`:core:designsystem`**                                                                               |
+| **`:feature:breed-details`** | Breed-details feature: `BreedDetailScreen` composable renders a single `CatModel` passed from the list with full breed info                                                        | **`:core:model`**, **`:core:designsystem`**                                                                              |
 ## Approach
 1.**Platform-agnostic network layer**
   - The app code depends only on a `NetworkDatasource` interface, not Retrofit directly.
@@ -19,18 +31,7 @@ A multi-module, Jetpack Compose (Android) codebase that fetches, pages, and disp
     - `NetworkDataSourceImpl` 
     - `BreedPagingSource` 
     - `BreedRepositoryImpl`
-    - `BreedListViewModel` 
-
-| Gradle Module                | What it owns                                                                                                                                                                       | Depends on                                                                                                               |
-|------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------|
-| **`:app`**                   | Main Android application entry-point: sets up Hilt, hosts the `NavDisplay`/NavHost, wires together `feature:breed-list` & `feature:breed-details`, applies the design system theme | `implementation` on **`:core:designsystem`**, **`:feature:breed-list`**, **`:feature:breed-details`**, **`:core:model`** |
-| **`:core:model`**            | Pure Kotlin domain models: `CatModel`, `Breed`, `Weight`, etc. — no Android or DI dependencies                                                                                     | *None*                                                                                                                   |
-| **`:core:designsystem`**     | Reusable Compose UI atoms: color palettes, typography, themes, and common composable                                                                                               | *None*                                                                                                                   |
-| **`:core:common`**           | Generic utilities & error-handling: `NetworkResult` sealed class, `safeNetworkCall`, `handleNetworkError`, `convertErrorBody`                                                      | *None*                                                                                                                   |
-| **`:core:network`**          | Networking layer: Retrofit `CatApiService`, DTOs matching The Cat API, Kotlinx-Serialization setup                                                                                 | **`:core:model`**                                                                                                        |
-| **`:core:data`**             | Data layer & repositories: `BreedRepositoryImpl`, `BreedPagingSource`, DTO→domain `toDomain()` mappers, paging configuration                                                       | **`:core:model`**, **`:core:network`**, **`:core:common`**                                                               |
-| **`:feature:breed-list`**    | Breed-list feature: `BreedListViewModel` (exposes `Flow<PagingData<CatModel>>`), `CatListScreen` composable with infinite-scroll paging                                            | **`:core:data`**, **`:core:designsystem`**                                                                               |
-| **`:feature:breed-details`** | Breed-details feature: `BreedDetailScreen` composable renders a single `CatModel` passed from the list with full breed info                                                        | **`:core:model`**, **`:core:designsystem`**                                                                              |
+    - `BreedListViewModel`
 
 
 ## What I’d Add Next
