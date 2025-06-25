@@ -20,7 +20,7 @@ class CatMapperTest {
         assert(cat.url == catDto.url)
         assert(cat.width == catDto.width)
         assert(cat.height == catDto.height)
-        assert(cat.breeds[0].id == catDto.breeds[0].id)
-        assert(cat.breeds.isNotEmpty())
+        assert(cat.breedModels[0].id == catDto.breeds[0].id)
+        assert(cat.breedModels.isNotEmpty())
     }
 }

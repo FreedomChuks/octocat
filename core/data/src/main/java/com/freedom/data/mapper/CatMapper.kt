@@ -1,6 +1,6 @@
 package com.freedom.data.mapper
 
-import com.freedom.model.Breed
+import com.freedom.model.BreedModel
 import com.freedom.model.CatModel
 import com.freedom.model.Weight
 import com.freedom.network.model.BreedDto
@@ -11,10 +11,10 @@ internal fun CatApiResponse.toDomain(): CatModel = CatModel(
     url = url,
     width = width,
     height = height,
-    breeds = breeds.map(BreedDto::toDomain)
+    breedModels = breeds.map(BreedDto::toDomain)
 )
 
-private fun BreedDto.toDomain(): Breed = Breed(
+private fun BreedDto.toDomain(): BreedModel = BreedModel(
     id = id,
     name = name,
     temperament = temperament,

@@ -6,9 +6,6 @@ import androidx.paging.PagingState
 import com.freedom.data.paging.BreedPagingSource
 import com.freedom.model.CatModel
 import com.freedom.network.NetworkDatasource
-import com.freedom.network.model.BreedDto
-import com.freedom.network.model.CatApiResponse
-import com.freedom.network.model.Weight
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
@@ -19,7 +16,7 @@ import org.junit.Before
 import org.junit.Test
 import java.io.IOException
 
-class BreedRepositoryImplTest {
+class BreedModelRepositoryImplTest {
     private val network:NetworkDatasource = mockk()
     private lateinit var repository: BreedRepositoryImpl
 
@@ -44,7 +41,7 @@ class BreedRepositoryImplTest {
         assertEquals(1, page.data.size)
         val cat = page.data.first()
         assertEquals("1", cat.id)
-        assertEquals("Birman", cat.breeds[0].name)
+        assertEquals("Birman", cat.breedModels[0].name)
 
         assertNull(page.prevKey)
         assertNull(page.nextKey)

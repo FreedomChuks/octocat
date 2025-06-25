@@ -20,8 +20,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,11 +30,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.freedom.breed_list.R
 import com.freedom.designsystem.theme.OctocatTheme
-import com.freedom.designsystem.theme.blueText
 import com.freedom.model.CatModel
 
 @Composable
@@ -45,7 +40,7 @@ fun BreedCard(
     catModel: CatModel,
     onCardClick: (CatModel) -> Unit = {}
 ) {
-    val breed = catModel.breeds.first()
+    val breed = catModel.breedModels.first()
     Card(
         onClick = {
             onCardClick(catModel)
@@ -128,7 +123,7 @@ fun BreedCard(
 }
 
 fun getFirstTemperament(cat: CatModel): String? {
-    val temperament = cat.breeds.firstOrNull()?.temperament
+    val temperament = cat.breedModels.firstOrNull()?.temperament
     return temperament?.split(",")?.first()?.trim()
 }
 
@@ -141,7 +136,7 @@ fun PreviewBreedCard(modifier: Modifier = Modifier) {
             catModel = CatModel(
                 id = "1",
                 url = "https://cdn2.thecatapi.com/images/2p6.jpg",
-                breeds = emptyList(),
+                breedModels = emptyList(),
                 width = 100,
                 height = 100
             )

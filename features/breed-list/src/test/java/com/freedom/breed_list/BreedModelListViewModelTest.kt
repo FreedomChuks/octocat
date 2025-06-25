@@ -21,7 +21,7 @@ import org.junit.Before
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class BreedListViewModelTest {
+class BreedModelListViewModelTest {
 
     private val dispatcher = UnconfinedTestDispatcher()
 

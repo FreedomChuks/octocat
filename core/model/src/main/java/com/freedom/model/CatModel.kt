@@ -4,14 +4,14 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CatModel(
-    val breeds: List<Breed>,
+    val breedModels: List<BreedModel>,
     val id: String,
     val url: String,
     val width: Int,
     val height: Int
 )
 @Serializable
-data class Breed(
+data class BreedModel(
     val id: String,
     val name: String,
     val temperament: String,

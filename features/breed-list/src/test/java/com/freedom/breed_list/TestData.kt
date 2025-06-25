@@ -1,11 +1,11 @@
 package com.freedom.breed_list
 
-import com.freedom.model.Breed
+import com.freedom.model.BreedModel
 import com.freedom.model.CatModel
 import com.freedom.model.Weight
 
 object TestData {
-    val fakeBreedDto = Breed(
+    val fakeBreedModelDto = BreedModel(
         weight = Weight(imperial = "6 - 15", metric = "3 - 7"),
         id = "birm",
         name = "Birman",
@@ -43,7 +43,7 @@ object TestData {
         url     = "https://example.com/cat1.jpg",
         width   = 100,
         height  = 100,
-        breeds  = listOf(fakeBreedDto)
+        breedModels  = listOf(fakeBreedModelDto)
     )
 
     fun fakeCatImageDtoPage(size: Int): List<CatModel> =

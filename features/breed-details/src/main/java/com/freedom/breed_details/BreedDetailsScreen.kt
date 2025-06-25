@@ -39,7 +39,7 @@ import coil3.compose.AsyncImage
 import com.freedom.designsystem.theme.OctocatTheme
 import com.freedom.designsystem.theme.White
 import com.freedom.designsystem.theme.textGray
-import com.freedom.model.Breed
+import com.freedom.model.BreedModel
 import com.freedom.model.CatModel
 import com.freedom.model.Weight
 
@@ -49,7 +49,7 @@ fun BreedDetailScreen(
     catModel: CatModel,
     onBack: () -> Unit
 ) {
-    val breed = catModel.breeds.first()
+    val breed = catModel.breedModels.first()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -212,8 +212,8 @@ fun PreviewBreedDetailsScreen() {
                 url = "https://cdn2.thecatapi.com/images/HOrX5gwLS.jpg", // Example image for Birman
                 width = 1526,
                 height = 2111,
-                breeds = listOf(
-                    Breed(
+                breedModels = listOf(
+                    BreedModel(
                         weight = Weight(imperial = "6 - 15", metric = "3 - 7"),
                         id = "birm",
                         name = "Birman",
