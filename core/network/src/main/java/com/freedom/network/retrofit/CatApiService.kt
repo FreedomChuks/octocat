@@ -11,4 +11,7 @@ interface CatApiService {
         @Query("page") page: Int,
         @Query("has_breeds") hasBreeds: Int = 1,
     ): List<CatApiResponse>
+
+    @GET("v1/breeds/search")
+    suspend fun searchBreeds(@Query("q") query: String): List<BreedDto>
 }

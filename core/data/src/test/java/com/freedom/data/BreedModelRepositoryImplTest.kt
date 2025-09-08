@@ -4,6 +4,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.freedom.data.paging.BreedPagingSource
+import com.freedom.data.paging.SearchPagingSource
 import com.freedom.model.CatModel
 import com.freedom.network.NetworkDatasource
 import io.mockk.coEvery
@@ -17,7 +18,7 @@ import org.junit.Test
 import java.io.IOException
 
 class BreedModelRepositoryImplTest {
-    private val network:NetworkDatasource = mockk()
+    private val network: NetworkDatasource = mockk()
     private lateinit var repository: BreedRepositoryImpl
 
     @Before
@@ -62,8 +63,10 @@ class BreedModelRepositoryImplTest {
     @Test
     fun `getRefreshKey returns null when no page covers anchorPosition`() {
         val source = BreedPagingSource(mockk(), limit = 4)
-        val page1: PagingSource.LoadResult.Page<Int, CatModel> = PagingSource.LoadResult.Page(emptyList(), prevKey = null, nextKey = 1)
-        val page2: PagingSource.LoadResult.Page<Int, CatModel> = PagingSource.LoadResult.Page(emptyList(), prevKey = 0,    nextKey = 2)
+        val page1: PagingSource.LoadResult.Page<Int, CatModel> =
+            PagingSource.LoadResult.Page(emptyList(), prevKey = null, nextKey = 1)
+        val page2: PagingSource.LoadResult.Page<Int, CatModel> =
+            PagingSource.LoadResult.Page(emptyList(), prevKey = 0, nextKey = 2)
         val state = PagingState(
             pages = listOf(page1, page2),
             anchorPosition = 5,
@@ -93,6 +96,25 @@ class BreedModelRepositoryImplTest {
         assertEquals(2, page.data.size)
         assertEquals("A", page.data[0].breedModels[0].name)
         assertEquals("Z", page.data[1].breedModels[0].name)
+    }
+
+    @Test
+    fun `search returns Page when networkDatasource succeeds`() = runTest {
+        val datasource = mockk<NetworkDatasource>()
+        val query = "beng"
+        coEvery { datasource.searchBreeds(query) } returns listOf(TestData.fakeBreedDto)
+        val source = SearchPagingSource(networkDatasource = datasource, query = query)
+
+        val params = PagingSource.LoadParams.Refresh(key = 0, loadSize = 1, placeholdersEnabled = false)
+        val result = source.load(params)
+
+        assertTrue(result is PagingSource.LoadResult.Page)
+        val page = result as PagingSource.LoadResult.Page<Int, CatModel>
+
+        assertEquals(1, page.data.size)
+        val cat = page.data.first()
+        assertEquals("birm", cat.breedModels[0].id)
+        assertEquals("Birman", cat.breedModels[0].name)
     }
 
 

@@ -4,5 +4,5 @@ import com.freedom.model.CatModel
 import kotlinx.coroutines.flow.Flow
 
 interface BreedRepository {
-     fun getCatBreed(limit: Int = 10): Flow<PagingData<CatModel>>
+     fun getCatBreed(query: String, limit: Int = 10): Flow<PagingData<CatModel>>
 }

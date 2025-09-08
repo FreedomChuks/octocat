@@ -7,4 +7,5 @@ class NetworkDataSourceImpl @Inject constructor(
     private val catApiService: CatApiService
 ): NetworkDatasource {
     override suspend fun getCatBreed(page: Int, limit: Int) = catApiService.getCatsWithBreeds(page = page, limit = limit)
+    override suspend fun searchBreeds(query: String) = catApiService.searchBreeds(query = query)
 }
