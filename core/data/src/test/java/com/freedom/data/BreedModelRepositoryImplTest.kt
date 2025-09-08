@@ -75,5 +75,25 @@ class BreedModelRepositoryImplTest {
         assertNull(refreshKey)
     }
 
+    @Test
+    fun `load returns sorted Page when networkDatasource succeeds`() = runTest {
+        val datasource = mockk<NetworkDatasource>()
+        val catA = TestData.fakeCatImageDto.copy(breeds = listOf(TestData.fakeBreedDto.copy(name = "A")))
+        val catZ = TestData.fakeCatImageDto.copy(breeds = listOf(TestData.fakeBreedDto.copy(name = "Z")))
+        coEvery { datasource.getCatBreed(page = 0, limit = 2) } returns listOf(catZ, catA)
+        val source = BreedPagingSource(networkDatasource = datasource, limit = 2)
+
+        val params = PagingSource.LoadParams.Refresh(key = 0, loadSize = 2, placeholdersEnabled = false)
+        val result = source.load(params)
+
+
+        assertTrue(result is PagingSource.LoadResult.Page)
+        val page = result as PagingSource.LoadResult.Page<Int, CatModel>
+
+        assertEquals(2, page.data.size)
+        assertEquals("A", page.data[0].breedModels[0].name)
+        assertEquals("Z", page.data[1].breedModels[0].name)
+    }
+
 
 }

@@ -30,7 +30,7 @@ class BreedPagingSource(
 
         return when (result) {
             is NetworkResult.Success -> {
-                val items = result.data
+                val items = result.data.sortedBy { it.breedModels.first().name }
                 val prev = (page - 1).takeIf { it >= 0 }
                 val next = if (items.size < limit) null else page + 1
                 LoadResult.Page(data = items, prevKey = prev, nextKey = next)
