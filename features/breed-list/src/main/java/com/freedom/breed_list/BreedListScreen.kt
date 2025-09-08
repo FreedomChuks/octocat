@@ -83,17 +83,7 @@ fun BreedListScreen(
                             color = Color.Red
                         )
                     }
-
-                    else -> item {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator()
-                        }
-                    }
+                    else -> {}
                 }
             }
         }

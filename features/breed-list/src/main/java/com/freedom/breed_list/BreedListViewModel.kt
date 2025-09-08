@@ -7,6 +7,7 @@ import com.freedom.data.BreedRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
 import javax.inject.Inject
 
@@ -18,7 +19,8 @@ class BreedListViewModel @Inject constructor(
     private val _searchQuery = MutableStateFlow("")
     val searchQuery = _searchQuery.asStateFlow()
 
-    val cats = searchQuery.flatMapLatest { query ->
+    @OptIn(kotlinx.coroutines.FlowPreview::class)
+    val cats = searchQuery.debounce(500).flatMapLatest { query ->
         repository.getCatBreed(query = query, limit = PAGE_SIZE)
     }.cachedIn(viewModelScope)
 
